@@ -1,0 +1,2056 @@
+{
+  "info": {
+    "name": "TFC_CafeDeAltura - API - Tests Automáticos",
+    "description": "Colección de pruebas automáticas y validaciones negativas para la API REST de la tienda de café TFC_CafeDeAltura. Incluye tests para todos los recursos principales, comprobando tanto respuestas correctas como errores esperados. Los endpoints de tipo 'GET all' implementan paginación y los tests automáticos validan la estructura de la respuesta, la presencia de los campos 'contenido' y 'paginacion', y la coherencia de los metadatos. Esta colección está orientada a la validación continua y la robustez del backend. Para más información, consulte la documentación técnica del proyecto.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Lola Fernández\",\n    \"email\": \"lola@email.com\",\n    \"telefono\": \"600123456\",\n    \"direccion\": \"Calle Mayor 12, Madrid\"\n}"
+            },
+            "description": "Registra un nuevo cliente. Campos obligatorios: nombre, email, telefono, direccion.\n\nNotas:\n- Campos obligatorios deben especificarse.\n- Ejemplo de cuerpo JSON recomendable."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Crear cliente",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(201);",
+                  "});\n",
+                  "// Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene todos los campos de cliente', function () {",
+                  "        pm.expect(jsonData).to.have.all.keys('id', 'nombre', 'email', 'telefono', 'direccion', 'fechaRegistro', 'activo');",
+                  "    });",
+                  "    pm.environment.set('clienteId', jsonData.id);",
+                  "} catch (e) {",
+                  "    console.warn('⚠No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Modificar cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Lola F. \",\n    \"email\": \"lola@email.com\",\n    \"telefono\": \"600123456\",\n    \"direccion\": \"Calle Mayor 12, Madrid\"\n}"
+            },
+            "description": "Reemplaza los datos del cliente por ID. Todos los campos deben estar presentes.\n\nNotas:\n- Todos los campos deben estar incluidos."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Modificar cliente",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404]);",
+                  "});\n",
+                  "// Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "// Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene todos los campos de cliente', function () {",
+                  "        pm.expect(jsonData).to.have.all.keys('id', 'nombre', 'email', 'telefono', 'direccion', 'fechaRegistro', 'activo');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "1"
+              ]
+            },
+            "description": "Elimina un cliente del sistema. Si el ID no existe, se devuelve 404.\n\nNotas:\n- Debe gestionarse el caso de ID inexistente (404 esperado)."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Eliminar cliente",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene todos los campos de cliente', function () {",
+                  "        pm.expect(jsonData).to.have.all.keys('id', 'nombre', 'email', 'telefono', 'direccion', 'fechaRegistro', 'activo');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Obtener pedidos por cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos/cliente/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos",
+                "cliente",
+                "1"
+              ]
+            },
+            "description": "Muestra todos los pedidos asociados al cliente cuyo ID se indica en la ruta."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Obtener pedidos por cliente",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene estructura anidada de pedido', function () {",
+                  "        pm.expect(jsonData).to.have.property('cliente');",
+                  "        pm.expect(jsonData).to.have.property('lineas');",
+                  "        pm.expect(jsonData.lineas[0]).to.have.property('cafe');",
+                  "        pm.expect(jsonData.lineas[0]).to.have.property('cantidad');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST cliente con nombre muy largo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "customers"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 9999,\n    \"nombre\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"\n}"
+            },
+            "description": "Intenta crear un cliente con un nombre excesivamente largo. El backend debe rechazarlo o truncar según la lógica de negocio."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST cliente con nombre muy largo",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 413]);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "Crear pedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"cliente\": { \"id\": 1 },\n    \"lineas\": [\n        { \"cafe\": { \"id\": 101 }, \"cantidad\": 2 },\n        { \"cafe\": { \"id\": 102 }, \"cantidad\": 1 }\n    ]\n}"
+            },
+            "description": "Crea un nuevo pedido indicando cliente y s con cantidades. Valida existencia y cantidad positiva.\n\nNotas:\n- Campos obligatorios deben especificarse.\n- Ejemplo de cuerpo JSON recomendable."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Crear pedido",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(201);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene estructura anidada de pedido', function () {",
+                  "        pm.expect(jsonData).to.have.property('cliente');",
+                  "        pm.expect(jsonData).to.have.property('lineas');",
+                  "        pm.expect(jsonData.lineas[0]).to.have.property('cafe');",
+                  "        pm.expect(jsonData.lineas[0]).to.have.property('cantidad');",
+                  "    });",
+                  "    pm.environment.set('pedidoId', jsonData.id);",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Obtener todos los pedidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "description": "Obtiene la lista paginada de pedidos registrados. Se valida la estructura de paginación ('contenido' y 'paginacion') en la respuesta.\n\nEjemplo de uso:\nGET /pedidos?page=1&size=2\n\nRespuesta esperada: 200 OK, JSON paginado."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Obtener todos los pedidos",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene estructura anidada de pedido', function () {",
+                  "        pm.expect(jsonData).to.have.property('cliente');",
+                  "        pm.expect(jsonData).to.have.property('lineas');",
+                  "        pm.expect(jsonData.lineas[0]).to.have.property('cafe');",
+                  "        pm.expect(jsonData.lineas[0]).to.have.property('cantidad');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Obtener pedido por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos",
+                "1"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Obtener pedido por ID",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene estructura anidada de pedido', function () {",
+                  "        pm.expect(jsonData).to.have.property('cliente');",
+                  "        pm.expect(jsonData).to.have.property('lineas');",
+                  "        pm.expect(jsonData.lineas[0]).to.have.property('cafe');",
+                  "        pm.expect(jsonData.lineas[0]).to.have.property('cantidad');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pedido con cafés duplicados en líneas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"cliente\": { \"id\": 1 },\n    \"lineas\": [\n        { \"cafe\": { \"id\": 101 }, \"cantidad\": 1 },\n        { \"cafe\": { \"id\": 101 }, \"cantidad\": 2 }\n    ]\n}"
+            },
+            "description": "Intenta crear un pedido con dos líneas que usan el mismo cafeId. El backend debe rechazarlo o agrupar correctamente según la lógica de negocio."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST pedido con cafés duplicados en líneas",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 409]);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "// Validación de mensaje de error",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Mensaje de error por duplicidad de café', function () {",
+                  "        pm.expect(jsonData.message).to.include('duplicado');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn('No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pedido y comprobar fecha de creación",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"cliente\": { \"id\": 1 },\n    \"lineas\": [\n        { \"cafe\": { \"id\": 101 }, \"cantidad\": 1 }\n    ]\n}"
+            },
+            "description": "Crea un pedido y comprueba que la fecha de creación está presente y es coherente."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST pedido y comprobar fecha de creación",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(201);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "// Validación de campo fecha",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('El pedido tiene campo fechaCreacion', function () {",
+                  "        pm.expect(jsonData).to.have.property('fechaCreacion');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn('No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pedido con línea inválida",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"cliente\": { \"id\": 1 },\n    \"lineas\": [\n        { \"cafe\": { \"id\": 9999 }, \"cantidad\": 1 }\n    ]\n}"
+            },
+            "description": "Intenta crear un pedido con cliente válido pero línea con café inexistente."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST pedido con línea inválida",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(400);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pedido con cantidad negativa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"cliente\": { \"id\": 1 },\n    \"lineas\": [\n        { \"cafe\": { \"id\": 101 }, \"cantidad\": -2 }\n    ]\n}"
+            },
+            "description": "Intenta crear un pedido con cantidad negativa en una línea."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST pedido con cantidad negativa",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(400);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pedido con cliente y línea inválidos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"cliente\": { \"id\": 9999 },\n    \"lineas\": [\n        { \"cafe\": { \"id\": 9999 }, \"cantidad\": -1 }\n    ]\n}"
+            },
+            "description": "Intenta crear un pedido con cliente inexistente y línea inválida."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST pedido con cliente y línea inválidos",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(400);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Errores simulados",
+      "item": [
+        {
+          "name": "Obtener todos los s",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe"
+              ]
+            },
+            "description": "Devuelve la lista paginada de cafés. Parámetros: page, size. Se valida la estructura de paginación ('contenido' y 'paginacion')."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Obtener todos los s",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Añadir nuevo ",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 5,\n    \"nombre\": \"Mocha\",\n    \"origen\": \"Per\\u00fa\",\n    \"precio\": 3.8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe"
+              ]
+            },
+            "description": "Crea un nuevo café. Se valida respuesta 201 Created."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Añadir nuevo ",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(201);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar  (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Mocha Especial\",\n    \"origen\": \"Per\\u00fa\",\n    \"precio\": 4.2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cafe/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "5"
+              ]
+            },
+            "description": "Actualiza un café por ID. Se valida respuesta 200 OK."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Actualizar  (PUT)",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404]);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Mensaje de error estructurado', function () {",
+                  "        pm.expect(jsonData).to.have.keys('status', 'message');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Modificar  parcialmente (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"precio\": 3.9\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cafe/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "5"
+              ]
+            },
+            "description": "Modifica parcialmente un café por ID. Se valida respuesta 200 OK."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Modificar  parcialmente (PATCH)",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404]);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Mensaje de error estructurado', function () {",
+                  "        pm.expect(jsonData).to.have.keys('status', 'message');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar  por ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "5"
+              ]
+            },
+            "description": "Elimina un café por ID. Se valida respuesta 200 OK o 404 si no existe."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: Eliminar  por ID",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test(' Estructura de error clara', function () {",
+                  "        pm.expect(jsonData).to.have.keys('status', 'message');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": " POST cliente sin nombre",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 9,\n    \"nombre\": \"\"\n}"
+            },
+            "description": "Simula error al crear cliente sin nombre (esperado: 400 Bad Request).\n\nNotas:\n- Campos obligatorios deben especificarse.\n- Ejemplo de cuerpo JSON recomendable."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST cliente sin nombre",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(201);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene campos clave de cliente', function () {",
+                  "        pm.expect(jsonData).to.have.any.keys('id', 'nombre', 'email');",
+                  "    });",
+                  "    pm.environment.set('clienteId', jsonData.id);",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": " PUT cliente inexistente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "999"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Intento de modificaci\\u00f3n\"\n}"
+            },
+            "description": "Simula pedido con cliente que no existe (esperado: 400 Bad Request).\n\nNotas:\n- Todos los campos deben estar incluidos."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: PUT cliente inexistente",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404]);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene campos clave de cliente', function () {",
+                  "        pm.expect(jsonData).to.have.any.keys('id', 'nombre', 'email');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": " POST pedido con cliente inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 4,\n    \"cliente\": { \"id\": 999 },\n    \"lineas\": [\n        {\n            \"id\": 101,\n            \"cantidad\": 2\n        }\n    ]\n}"
+            },
+            "description": "Simula pedido con cliente que no existe (esperado: 400 Bad Request).\n\nNotas:\n- Campos obligatorios deben especificarse.\n- Ejemplo de cuerpo JSON recomendable."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST pedido con cliente inexistente",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(201);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene campos clave de cliente', function () {",
+                  "        pm.expect(jsonData).to.have.any.keys('id', 'cliente', 'lineas');",
+                  "    });",
+                  "    pm.environment.set('clienteId', jsonData.id);",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": " POST pedido vacío (sin s)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 5,\n    \"cliente\": { \"id\": 1 },\n    \"lineas\": []\n}"
+            },
+            "description": "\n\nNotas:\n- Campos obligatorios deben especificarse.\n- Ejemplo de cuerpo JSON recomendable."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST pedido vacío (sin s)",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(201);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene campos clave de pedido', function () {",
+                  "        pm.expect(jsonData).to.have.any.keys('id', 'cliente', 'lineas');",
+                  "        pm.expect(jsonData.lineas.length).to.be.above(0);",
+                  "    });",
+                  "    pm.environment.set('pedidoId', jsonData.id);",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": " POST pedido con cantidad inválida",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 6,\n    \"cliente\": { \"id\": 1 },\n    \"lineas\": [\n        {\n            \"id\": 101,\n            \"cantidad\": 0\n        }\n    ]\n}"
+            },
+            "description": "\n\nNotas:\n- Campos obligatorios deben especificarse.\n- Ejemplo de cuerpo JSON recomendable."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST pedido con cantidad inválida",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(201);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Contiene campos clave de pedido', function () {",
+                  "        pm.expect(jsonData).to.have.any.keys('id', 'cliente', 'lineas');",
+                  "        pm.expect(jsonData.lineas.length).to.be.above(0);",
+                  "    });",
+                  "    pm.environment.set('pedidoId', jsonData.id);",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": " DELETE  inexistente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "999"
+              ]
+            },
+            "description": "Simula pedido con  no registrado (esperado: 400 Bad Request).\n\nNotas:\n- Debe gestionarse el caso de ID inexistente (404 esperado)."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: DELETE  inexistente",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test(' Estructura de error clara', function () {",
+                  "        pm.expect(jsonData).to.have.keys('status', 'message');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": " PATCH  inexistente",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "999"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"precio\": 3.5\n}"
+            },
+            "description": "Simula pedido con  no registrado (esperado: 400 Bad Request)."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "//  Validación de respuesta para:  PATCH  inexistente",
+                  "pm.test(' Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404]);",
+                  "});\n",
+                  "//  Validación del formato de respuesta",
+                  "pm.test(' Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});\n",
+                  "//  Validaciones específicas del recurso",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test(' Estructura de error clara', function () {",
+                  "        pm.expect(jsonData).to.have.keys('status', 'message');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn(' No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Flujo completo: crear, modificar, eliminar y comprobar estado final",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "101"
+              ]
+            },
+            "description": "Comprueba que después de crear, modificar y eliminar un café, el estado final es correcto (404 Not Found si se ha eliminado)."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: flujo completo de operaciones",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});",
+                  "// Validación del formato de respuesta si existe",
+                  "if(pm.response.code === 200) {",
+                  "    pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "        pm.response.to.be.withBody;",
+                  "        pm.response.to.be.json;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE café incluido en pedido",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "101"
+              ]
+            },
+            "description": "Intenta eliminar un café que está incluido en un pedido. El backend debe impedirlo o gestionar el caso según la lógica de negocio."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: DELETE café incluido en pedido",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 409]);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "// Validación de mensaje de error",
+                  "try {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.test('Mensaje de error por café en pedido', function () {",
+                  "        pm.expect(jsonData.message).to.include('pedido');",
+                  "    });",
+                  "} catch (e) {",
+                  "    console.warn('No se pudo interpretar la respuesta como JSON.');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST café con ID negativo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": -1,\n    \"nombre\": \"Negativo\",\n    \"origen\": \"ErrorLand\",\n    \"precio\": 2.5\n}"
+            },
+            "description": "Intenta crear un café con ID negativo. El backend debe rechazarlo."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST café con ID negativo",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(400);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST café con ID ya existente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 101,\n    \"nombre\": \"Duplicado\",\n    \"origen\": \"Colombia\",\n    \"precio\": 3.5\n}"
+            },
+            "description": "Intenta crear un café con un ID que ya existe. El backend debe rechazarlo."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST café con ID ya existente",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(409);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST café con ID muy grande",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 999999999999999999,\n    \"nombre\": \"Grande\",\n    \"origen\": \"TestLand\",\n    \"precio\": 2.5\n}"
+            },
+            "description": "Intenta crear un café con un ID extremadamente grande. El backend debe rechazarlo o gestionarlo correctamente."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST café con ID muy grande",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 413]);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST café con precio cero",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 300,\n    \"nombre\": \"PrecioCero\",\n    \"origen\": \"TestLand\",\n    \"precio\": 0\n}"
+            },
+            "description": "Intenta crear un café con precio cero. El backend debe rechazarlo."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST café con precio cero",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(400);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST café con precio excesivo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": 301,\n    \"nombre\": \"PrecioExcesivo\",\n    \"origen\": \"TestLand\",\n    \"precio\": 1000000\n}"
+            },
+            "description": "Intenta crear un café con un precio excesivamente alto. El backend debe rechazarlo o gestionarlo correctamente."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: POST café con precio excesivo",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 413]);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET café después de PUT",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "101"
+              ]
+            },
+            "description": "Consulta el café con ID 101 después de modificarlo con PUT para confirmar que los cambios se reflejan."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: GET café después de PUT",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});",
+                  "// Validación del formato de respuesta",
+                  "pm.test('Cuerpo de respuesta en formato JSON', function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET café después de DELETE",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/101",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cafe",
+                "101"
+              ]
+            },
+            "description": "Consulta el café con ID 101 después de eliminarlo para confirmar que ya no existe."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Validación de respuesta para: GET café después de DELETE",
+                  "pm.test('Código HTTP correcto', function () {",
+                  "    pm.expect(pm.response.code).to.eql(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST café con intensidad fuera de rango",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Café Inválido\",\n  \"descripcion\": \"Intensidad fuera de rango\",\n  \"precio\": 7.0,\n  \"origen\": \"Colombia\",\n  \"intensidad\": 15\n}"
+            },
+            "description": "Intenta crear un café con intensidad fuera del rango permitido (1-10). El backend debe rechazarlo."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Mensaje de error por intensidad', function () {",
+                  "    pm.expect(pm.response.text()).to.include('intensidad');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST café sin intensidad",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Café sin intensidad\",\n  \"descripcion\": \"Falta intensidad\",\n  \"precio\": 5.0,\n  \"origen\": \"Brasil\"\n}"
+            },
+            "description": "Intenta crear un café sin el campo intensidad. El backend debe rechazarlo."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Mensaje de error por intensidad', function () {",
+                  "    pm.expect(pm.response.text()).to.include('intensidad');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST café válido con todos los campos",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Café Completo\",\n  \"descripcion\": \"Café con todos los campos\",\n  \"precio\": 6.0,\n  \"origen\": \"Perú\",\n  \"intensidad\": 9\n}"
+            },
+            "description": "Crea un café válido con todos los campos, incluyendo descripcion e intensidad."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('Respuesta contiene descripcion e intensidad', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('descripcion');",
+                  "    pm.expect(jsonData).to.have.property('intensidad');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Carrito",
+      "item": [
+        {
+          "name": "Preparar datos de prueba (crear cliente y café)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Cliente Carrito Test\"\n}"
+            },
+            "description": "Crea un cliente de prueba para los tests de carrito."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set('clienteId', jsonData.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear café de prueba",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Café Carrito Test\",\n  \"origen\": \"Colombia\",\n  \"precio\": 10.0,\n  \"stock\": 10\n}"
+            },
+            "description": "Crea un café de prueba para los tests de carrito."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set('cafeId', jsonData.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Añadir café al carrito - Éxito",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/{{clienteId}}/anadir",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "{{clienteId}}", "anadir"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCafe\": {{cafeId}},\n  \"cantidad\": 2\n}"
+            },
+            "description": "Añade café al carrito del cliente."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP correcto', function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "pm.test('Carrito actualizado', function () {",
+                  "    pm.expect(json).to.have.property('clienteId', parseInt(pm.environment.get('clienteId')));",
+                  "    pm.expect(json).to.have.property('lineas');",
+                  "    pm.expect(json.lineas[pm.environment.get('cafeId')].cantidad).to.eql(2);",
+                  "    pm.expect(json).to.have.property('fechaActualizacion');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Añadir café al carrito - Stock insuficiente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/{{clienteId}}/anadir",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "{{clienteId}}", "anadir"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCafe\": {{cafeId}},\n  \"cantidad\": 100\n}"
+            },
+            "description": "Intenta añadir más cantidad de café de la disponible en stock."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP correcto', function () { pm.response.to.have.status(400); });",
+                  "var json = pm.response.json();",
+                  "pm.test('Mensaje de error por stock insuficiente', function () { pm.expect(json.message).to.include('stock'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Modificar cantidad de café en el carrito - Éxito",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/{{clienteId}}/modificar",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "{{clienteId}}", "modificar"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCafe\": {{cafeId}},\n  \"cantidad\": 3\n}"
+            },
+            "description": "Modifica la cantidad de café en el carrito."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP correcto', function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "pm.test('Cantidad modificada', function () { pm.expect(json.lineas[pm.environment.get('cafeId')].cantidad).to.eql(3); });",
+                  "pm.test('Fecha de actualización presente', function () { pm.expect(json).to.have.property('fechaActualizacion'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Vaciar carrito - Éxito",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/{{clienteId}}/vaciar",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "{{clienteId}}", "vaciar"]
+            },
+            "description": "Vacía el carrito del cliente."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP correcto', function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "pm.test('Carrito vacío', function () { pm.expect(Object.keys(json.lineas).length).to.eql(0); });",
+                  "pm.test('Fecha de actualización presente', function () { pm.expect(json).to.have.property('fechaActualizacion'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Confirmar carrito (checkout) - Éxito",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/{{clienteId}}/confirmar",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "{{clienteId}}", "confirmar"]
+            },
+            "description": "Confirma el carrito, crea un pedido y vacía el carrito."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP correcto', function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "pm.test('Pedido creado', function () { pm.expect(json).to.have.property('id'); pm.expect(json).to.have.property('clienteId', parseInt(pm.environment.get('clienteId'))); });",
+                  "pm.test('Estado pendiente', function () { pm.expect(json.estado).to.eql('PENDIENTE'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [],
+  "variable": [],
+  "auth": {}
+}

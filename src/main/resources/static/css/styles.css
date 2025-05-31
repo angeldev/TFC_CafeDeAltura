@@ -1,0 +1,319 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    background: #f7f6f3;
+    color: #2d2d2d;
+}
+
+a {
+    color: #7b3f00;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+a:hover { color: #b86b2b; }
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 1.2rem 2.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #7b3f00;
+}
+.logo img {
+    height: 40px;
+}
+.header nav {
+    display: flex;
+    gap: 1.5rem;
+}
+.header nav a.active, .header nav a:hover {
+    font-weight: bold;
+    color: #b86b2b;
+}
+.header-actions .btn-login {
+    background: #7b3f00;
+    color: #fff;
+    padding: 0.5rem 1.2rem;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.header-actions .btn-login:hover {
+    background: #b86b2b;
+}
+
+.hero {
+    background: linear-gradient(90deg, #fffbe6 60%, #f7e9d0 100%);
+    padding: 3.5rem 2rem 2.5rem 2rem;
+    text-align: center;
+}
+.hero h1 {
+    font-size: 2.7rem;
+    color: #7b3f00;
+    margin-bottom: 1rem;
+}
+.hero p {
+    font-size: 1.2rem;
+    color: #4d3a1a;
+    margin-bottom: 2rem;
+}
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+}
+.btn, .btn-primary, .btn-secondary, .btn-outline {
+    display: inline-block;
+    padding: 0.7rem 1.7rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.btn-primary {
+    background: #7b3f00;
+    color: #fff;
+}
+.btn-primary:hover {
+    background: #b86b2b;
+}
+.btn-secondary {
+    background: #fff;
+    color: #7b3f00;
+    border: 2px solid #7b3f00;
+}
+.btn-secondary:hover {
+    background: #f7e9d0;
+}
+.btn-outline {
+    background: transparent;
+    color: #7b3f00;
+    border: 2px solid #7b3f00;
+}
+.btn-outline:hover {
+    background: #7b3f00;
+    color: #fff;
+}
+
+.beneficios {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin: 3rem 0 2rem 0;
+}
+.beneficio-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    width: 260px;
+}
+.beneficio-card img {
+    height: 48px;
+    margin-bottom: 1rem;
+}
+.beneficio-card h3 {
+    color: #7b3f00;
+    margin-bottom: 0.5rem;
+}
+.beneficio-card p {
+    color: #4d3a1a;
+    font-size: 1rem;
+}
+
+.productos-destacados {
+    background: #fffbe6;
+    padding: 2.5rem 0 2rem 0;
+    text-align: center;
+}
+.productos-destacados h2 {
+    color: #7b3f00;
+    margin-bottom: 2rem;
+}
+.productos-lista {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+.producto-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 1.2rem 1rem;
+    width: 210px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    transition: transform 0.15s;
+}
+.producto-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 4px 16px rgba(123,63,0,0.10);
+}
+.producto-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 7px;
+    margin-bottom: 0.7rem;
+}
+.producto-card .nombre {
+    font-weight: 600;
+    color: #7b3f00;
+    margin-bottom: 0.3rem;
+}
+.producto-card .precio {
+    color: #b86b2b;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.ver-todos {
+    margin-top: 1.5rem;
+}
+
+.footer {
+    background: #7b3f00;
+    color: #fff;
+    text-align: center;
+    padding: 1.2rem 0 1rem 0;
+    margin-top: 2rem;
+}
+.footer nav {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+.footer nav a {
+    color: #fff;
+    font-weight: 500;
+}
+.footer nav a:hover {
+    text-decoration: underline;
+}
+
+/* Formularios */
+.formulario {
+    background: #fff;
+    max-width: 400px;
+    margin: 2.5rem auto;
+    padding: 2rem 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.formulario h2 {
+    color: #7b3f00;
+    margin-bottom: 1.5rem;
+}
+.formulario label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: #4d3a1a;
+    font-weight: 500;
+}
+.formulario input, .formulario select {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #d1bfa3;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.formulario .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+.formulario .error {
+    color: #c0392b;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Tablas */
+.tabla {
+    width: 95%;
+    margin: 2rem auto;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.tabla th, .tabla td {
+    padding: 1rem;
+    border-bottom: 1px solid #f0e6d2;
+    text-align: left;
+}
+.tabla th {
+    background: #f7e9d0;
+    color: #7b3f00;
+    font-weight: 600;
+}
+.tabla tr:last-child td {
+    border-bottom: none;
+}
+.tabla tr:hover {
+    background: #fffbe6;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .beneficios, .productos-lista {
+        flex-direction: column;
+        align-items: center;
+    }
+    .beneficio-card, .producto-card {
+        width: 90%;
+    }
+}
+@media (max-width: 600px) {
+    .header, .footer {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    .hero {
+        padding: 2rem 0.5rem;
+    }
+    .formulario {
+        padding: 1.2rem 0.7rem;
+    }
+}
+
+.success {
+    color: #155724;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 0.7rem 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+    text-align: center;
+    font-size: 1rem;
+}
+.error {
+    color: #721c24;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 0.7rem 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+    text-align: center;
+    font-size: 1rem;
+} 

@@ -1,0 +1,490 @@
+{
+  "info": {
+    "name": "TFC_CafeDeAltura - API",
+    "description": "Colección principal de ejemplos y pruebas funcionales para la API REST de la tienda de café TFC_CafeDeAltura. Incluye peticiones para todos los recursos principales (café, clientes, pedidos y carrito), con ejemplos de uso, cuerpos de petición y respuesta, y descripciones orientadas a desarrolladores y usuarios que deseen probar la API manualmente. Los endpoints de tipo 'GET all' soportan paginación mediante los parámetros 'page' y 'size', devolviendo los resultados en el campo 'contenido' y los metadatos de paginación en el campo 'paginacion'. Para más información, consulte la documentación técnica del proyecto.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Café",
+      "description": "Peticiones relacionadas con el recurso café.",
+      "item": [
+        {
+          "name": "GET /cafe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe"]
+            },
+            "description": "Devuelve la lista paginada de cafés. Parámetros: page, size. Respuesta: 200 OK, JSON con campos 'contenido' y 'paginacion'. Más detalles y ejemplos en la documentación."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /cafe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Café de ejemplo\",\n  \"origen\": \"Colombia\",\n  \"precio\": 12.5\n}"
+            },
+            "description": "Crea un nuevo café. Respuesta: 201 Created."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /cafe/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nuevo nombre\",\n  \"origen\": \"Brasil\",\n  \"precio\": 13.0\n}"
+            },
+            "description": "Actualiza un café por ID. Respuesta: 200 OK."
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /cafe/{id}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio\": 14.0\n}"
+            },
+            "description": "Modifica parcialmente un café por ID. Respuesta: 200 OK."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /cafe/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe", "1"]
+            },
+            "description": "Elimina un café por ID. Respuesta: 200 OK o 404 si no existe."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "description": "Peticiones relacionadas con el recurso clientes.",
+      "item": [
+        {
+          "name": "POST /clientes",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Lola Fernández\",\n  \"email\": \"lola@email.com\",\n  \"telefono\": \"600123456\",\n  \"direccion\": \"Calle Mayor 12, Madrid\"\n}"
+            },
+            "description": "Registra un nuevo cliente en el sistema.\nCampos obligatorios: nombre, email, telefono, direccion.\nEjemplo de cuerpo:\n{\n  \"nombre\": \"Lola Fernández\",\n  \"email\": \"lola@email.com\",\n  \"telefono\": \"600123456\",\n  \"direccion\": \"Calle Mayor 12, Madrid\"\n}\nRespuesta esperada: 201 Created, objeto Cliente creado.",
+            "response": [
+              {
+                "code": 201,
+                "body": "{\n  \"id\": 1,\n  \"nombre\": \"Lola Fernández\",\n  \"email\": \"lola@email.com\",\n  \"telefono\": \"600123456\",\n  \"direccion\": \"Calle Mayor 12, Madrid\",\n  \"fechaRegistro\": \"2025-05-27T12:00:00\",\n  \"activo\": true\n}",
+                "header": []
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /clientes/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Lola F. Actualizado\"\n}"
+            },
+            "description": "Actualiza la información de un cliente existente.\nCampos obligatorios: nombre.\nEjemplo de cuerpo:\n{\n  \"nombre\": \"Lola F. Actualizado\"\n}\nRespuesta esperada: 200 OK, objeto Cliente actualizado."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /clientes/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "1"]
+            },
+            "description": "Elimina un cliente del sistema por su ID.\nRespuesta esperada: 200 OK si se elimina, 404 Not Found si no existe."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /pedidos/cliente/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos/cliente/1?page=1&size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos", "cliente", "1"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "5" }
+              ]
+            },
+            "description": "Muestra los pedidos asociados al cliente cuyo ID se indica en la ruta, paginados.\nParámetros: page, size.\nRespuesta esperada: 200 OK, JSON con campos 'contenido' (lista de pedidos) y 'paginacion' (metadatos de paginación)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "description": "Peticiones relacionadas con el recurso pedidos.",
+      "item": [
+        {
+          "name": "POST /pedidos",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": { \"id\": 1 },\n  \"lineas\": [\n    { \"cafe\": { \"id\": 101 }, \"cantidad\": 2 },\n    { \"cafe\": { \"id\": 102 }, \"cantidad\": 1 }\n  ]\n}"
+            },
+            "description": "Crea un nuevo pedido indicando el cliente y las líneas de pedido (cafés y cantidades).\nCampos obligatorios: cliente, lineas (con id y cantidad).\nEjemplo de cuerpo:\n{\n  \"cliente\": { \"id\": 1 },\n  \"lineas\": [\n    { \"cafe\": { \"id\": 101 }, \"cantidad\": 2 },\n    { \"cafe\": { \"id\": 102 }, \"cantidad\": 1 }\n  ]\n}\nRespuesta esperada: 201 Created, objeto Pedido creado."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /pedidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos"]
+            },
+            "description": "Obtiene la lista de todos los pedidos registrados en el sistema.\nRespuesta esperada: 200 OK, lista de objetos Pedido."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /pedidos/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos", "1"]
+            },
+            "description": "Obtiene el detalle de un pedido por su ID.\nRespuesta esperada: 200 OK, objeto Pedido. 404 Not Found si no existe."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Carrito",
+      "description": "Peticiones relacionadas con el recurso carrito de compra.",
+      "item": [
+        {
+          "name": "GET /carrito/{clienteId}",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "1"]
+            },
+            "description": "Obtiene el carrito actual del cliente, incluyendo las líneas de pedido y la fecha de última actualización.\nRespuesta esperada: 200 OK, objeto Carrito."
+          },
+          "response": [
+            {
+              "code": 200,
+              "body": "{\n  \"clienteId\": 1,\n  \"lineas\": {\n    \"101\": { \"idCafe\": 101, \"nombreCafe\": \"Colombia\", \"precioUnitario\": 10.0, \"cantidad\": 2, \"subtotal\": 20.0 },\n    \"102\": { \"idCafe\": 102, \"nombreCafe\": \"Brasil\", \"precioUnitario\": 8.0, \"cantidad\": 1, \"subtotal\": 8.0 }\n  },\n  \"fechaActualizacion\": \"2025-05-27T12:34:56\"\n}",
+              "header": []
+            }
+          ]
+        },
+        {
+          "name": "POST /carrito/{clienteId}/anadir",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/1/anadir",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "1", "anadir"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCafe\": 101,\n  \"cantidad\": 2\n}"
+            },
+            "description": "Añade una cantidad de un café al carrito del cliente. Valida stock.\nCampos obligatorios: idCafe, cantidad.\nRespuesta esperada: 200 OK, objeto Carrito actualizado."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /carrito/{clienteId}/eliminar",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/1/eliminar",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "1", "eliminar"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCafe\": 101\n}"
+            },
+            "description": "Elimina un café del carrito del cliente.\nCampo obligatorio: idCafe.\nRespuesta esperada: 200 OK, objeto Carrito actualizado."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /carrito/{clienteId}/modificar",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/1/modificar",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "1", "modificar"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCafe\": 101,\n  \"cantidad\": 3\n}"
+            },
+            "description": "Modifica la cantidad de un café en el carrito. Valida stock.\nCampos obligatorios: idCafe, cantidad.\nRespuesta esperada: 200 OK, objeto Carrito actualizado."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /carrito/{clienteId}/vaciar",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/1/vaciar",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "1", "vaciar"]
+            },
+            "description": "Vacía el carrito del cliente.\nRespuesta esperada: 200 OK, objeto Carrito vacío."
+          },
+          "response": [
+            {
+              "code": 200,
+              "body": "{\n  \"clienteId\": 1,\n  \"lineas\": {},\n  \"fechaActualizacion\": \"2025-05-27T12:40:00\"\n}",
+              "header": []
+            }
+          ]
+        },
+        {
+          "name": "POST /carrito/{clienteId}/confirmar",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/1/confirmar",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "1", "confirmar"]
+            },
+            "description": "Confirma el carrito del cliente, crea un pedido y vacía el carrito. Valida stock.\nRespuesta esperada: 201 Created, objeto Pedido creado."
+          },
+          "response": [
+            {
+              "code": 201,
+              "body": "{\n  \"id\": 10,\n  \"clienteId\": 1,\n  \"lineas\": [\n    { \"idCafe\": 101, \"nombreCafe\": \"Colombia\", \"precioUnitario\": 10.0, \"cantidad\": 2, \"subtotal\": 20.0 }\n  ],\n  \"fechaCreacion\": \"2025-05-27T12:45:00\",\n  \"total\": 20.0,\n  \"estado\": \"PENDIENTE\",\n  \"comentario\": \"\"\n}",
+              "header": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Errores simulados",
+      "description": "Casos de prueba que provocan errores 400 o 404 para validar el backend.",
+      "item": [
+        {
+          "name": "POST /clientes (sin nombre)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"\"\n}"
+            },
+            "description": "Intenta crear un cliente sin nombre (campo obligatorio vacío).\nEjemplo de cuerpo:\n{\n  \"nombre\": \"\"\n}\nRespuesta esperada: 400 Bad Request, mensaje de error indicando que el nombre es obligatorio."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /clientes/{id} (inexistente)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/999",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "999"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Intento de modificación\"\n}"
+            },
+            "description": "Intenta modificar un cliente con un ID que no existe.\nEjemplo de cuerpo:\n{\n  \"nombre\": \"Intento de modificación\"\n}\nRespuesta esperada: 404 Not Found, mensaje de error indicando que el recurso no existe."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /pedidos (cliente inexistente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": { \"id\": 999 },\n  \"lineas\": [\n    { \"cafe\": { \"id\": 101 }, \"cantidad\": 2 }\n  ]\n}"
+            },
+            "description": "Intenta crear un pedido con un cliente que no existe.\nEjemplo de cuerpo:\n{\n  \"cliente\": { \"id\": 999 },\n  \"lineas\": [\n    { \"cafe\": { \"id\": 101 }, \"cantidad\": 2 }\n  ]\n}\nRespuesta esperada: 404 Not Found, mensaje de error indicando que el cliente no existe."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /pedidos (sin lineas)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": { \"id\": 1 },\n  \"lineas\": []\n}"
+            },
+            "description": "Intenta crear un pedido sin líneas de pedido.\nEjemplo de cuerpo:\n{\n  \"cliente\": { \"id\": 1 },\n  \"lineas\": []\n}\nRespuesta esperada: 400 Bad Request, mensaje de error indicando que debe haber al menos una línea de pedido."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /cafe/{id} (inexistente)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cafe/999",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafe", "999"]
+            },
+            "description": "Intenta eliminar un café con un ID que no existe.\nRespuesta esperada: 404 Not Found, mensaje de error indicando que el recurso no existe."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

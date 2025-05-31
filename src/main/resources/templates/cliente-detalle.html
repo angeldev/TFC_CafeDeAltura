@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Cliente: ' + ${cliente.nombre}">Detalle cliente</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+    <header th:replace="~{index :: header}"></header>
+    <main>
+        <h1 th:text="${cliente.nombre}" style="text-align:center; margin-top:2rem;"></h1>
+        <div class="detalle-card">
+            <p><strong>ID:</strong> <span th:text="${cliente.id}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${cliente.email}"></span></p>
+            <p><strong>Teléfono:</strong> <span th:text="${cliente.telefono}"></span></p>
+            <p><strong>Dirección:</strong> <span th:text="${cliente.direccion}"></span></p>
+        </div>
+        <div style="margin-top:2rem; text-align:center;">
+            <a th:href="@{'/clientes/' + ${cliente.id} + '/editar'}" class="btn btn-secondary">Editar</a>
+            <form th:action="@{'/clientes/' + ${cliente.id} + '/eliminar'}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+            <a th:href="@{/clientes}" class="btn btn-outline">Volver</a>
+        </div>
+    </main>
+    <footer th:replace="~{index :: footer}"></footer>
+</body>
+</html> 

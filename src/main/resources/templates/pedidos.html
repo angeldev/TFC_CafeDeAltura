@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos | Café de Altura</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+    <header th:replace="~{index :: header}"></header>
+    <main>
+        <h1 style="text-align:center; margin-top:2rem;">Pedidos</h1>
+        <!-- Filtros y búsqueda -->
+        <form method="get" action="/pedidos" style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-bottom:2rem;">
+            <input type="text" name="cliente" placeholder="Buscar por cliente" th:value="${param.cliente}" />
+            <label>Fecha desde:
+                <input type="date" name="fechaDesde" th:value="${param.fechaDesde}" />
+            </label>
+            <label>Fecha hasta:
+                <input type="date" name="fechaHasta" th:value="${param.fechaHasta}" />
+            </label>
+            <label>Estado:
+                <select name="estado" th:value="${param.estado}">
+                    <option value="">Todos</option>
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="ENVIADO">Enviado</option>
+                    <option value="CANCELADO">Cancelado</option>
+                </select>
+            </label>
+            <label>Ordenar por:
+                <select name="orden" th:value="${param.orden}">
+                    <option value="fecha">Fecha</option>
+                    <option value="total">Total</option>
+                </select>
+            </label>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+        <div style="text-align:right; margin-bottom:1rem;">
+            <a th:href="@{/pedidos/nuevo}" class="btn btn-primary">Nuevo pedido</a>
+        </div>
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+        <div th:if="${success}" class="success" th:text="${success}"></div>
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido : ${pedidos}">
+                    <td th:text="${pedido.id}">1</td>
+                    <td th:text="${pedido.cliente.nombre}">Cliente</td>
+                    <td th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                    <td th:text="${#numbers.formatDecimal(pedido.total, 1, 'POINT', 2, 'NONE')} + ' €'">20,00 €</td>
+                    <td th:text="${pedido.estado}">PENDIENTE</td>
+                    <td>
+                        <a th:href="@{'/pedidos/' + ${pedido.id}}" class="btn btn-outline">Ver</a>
+                        <a th:href="@{'/pedidos/' + ${pedido.id} + '/editar'}" class="btn btn-secondary">Editar</a>
+                        <form th:action="@{'/pedidos/' + ${pedido.id} + '/eliminar'}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pagination" style="text-align:center; margin:2rem 0;">
+            <a th:if="${paginaActual > 1}"
+               th:href="@{/pedidos(
+                    page=${paginaActual - 1},
+                    size=${tamanoPagina},
+                    cliente=${param.cliente} ?: null,
+                    fechaDesde=${param.fechaDesde} ?: null,
+                    fechaHasta=${param.fechaHasta} ?: null,
+                    estado=${param.estado} ?: null,
+                    orden=${param.orden} ?: null
+               )}">Anterior</a>
+            <span th:text="'Página ' + ${paginaActual} + ' de ' + ${totalPaginas}"></span>
+            <a th:if="${paginaActual < totalPaginas}"
+               th:href="@{/pedidos(
+                    page=${paginaActual + 1},
+                    size=${tamanoPagina},
+                    cliente=${param.cliente} ?: null,
+                    fechaDesde=${param.fechaDesde} ?: null,
+                    fechaHasta=${param.fechaHasta} ?: null,
+                    estado=${param.estado} ?: null,
+                    orden=${param.orden} ?: null
+               )}">Siguiente</a>
+        </div>
+    </main>
+    <footer th:replace="~{index :: footer}"></footer>
+</body>
+</html> 

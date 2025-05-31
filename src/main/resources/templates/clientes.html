@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes | Café de Altura</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+    <header th:replace="~{index :: header}"></header>
+    <main>
+        <h1 style="text-align:center; margin-top:2rem;">Clientes registrados</h1>
+        <!-- Filtros y búsqueda -->
+        <form method="get" action="/clientes" style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-bottom:2rem;">
+            <input type="text" name="nombre" placeholder="Buscar por nombre" th:value="${param.nombre}" />
+            <label>Registrados después de:
+                <input type="datetime-local" name="fecha" th:value="${param.fecha}" />
+            </label>
+            <label><input type="checkbox" name="emailVerificado" th:checked="${param.emailVerificado}" /> Email verificado</label>
+            <label><input type="checkbox" name="conPedidos" th:checked="${param.conPedidos}" /> Solo con pedidos</label>
+            <label>Ordenar por:
+                <select name="orden" th:value="${param.orden}">
+                    <option value="nombre">Nombre</option>
+                    <option value="fecha">Fecha de registro</option>
+                </select>
+            </label>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+        <div style="text-align:right; margin-bottom:1rem;">
+            <a th:href="@{/clientes/nuevo}" class="btn btn-primary">Nuevo cliente</a>
+        </div>
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+        <div th:if="${success}" class="success" th:text="${success}"></div>
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="cliente : ${clientes}">
+                    <td th:text="${cliente.id}">1</td>
+                    <td th:text="${cliente.nombre}">Nombre</td>
+                    <td th:text="${cliente.email}">email@ejemplo.com</td>
+                    <td th:text="${cliente.telefono}">600123456</td>
+                    <td th:text="${cliente.direccion}">Calle Mayor</td>
+                    <td>
+                        <a th:href="@{'/clientes/' + ${cliente.id}}" class="btn btn-outline">Ver</a>
+                        <a th:href="@{'/clientes/' + ${cliente.id} + '/editar'}" class="btn btn-secondary">Editar</a>
+                        <form th:action="@{'/clientes/' + ${cliente.id} + '/eliminar'}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pagination" style="text-align:center; margin:2rem 0;">
+            <a th:if="${paginaActual > 1}"
+               th:href="@{/clientes(
+                    page=${paginaActual - 1},
+                    size=${tamanoPagina},
+                    nombre=${param.nombre} ?: null,
+                    fecha=${param.fecha} ?: null,
+                    emailVerificado=${param.emailVerificado} ?: null,
+                    conPedidos=${param.conPedidos} ?: null,
+                    orden=${param.orden} ?: null
+               )}">Anterior</a>
+            <span th:text="'Página ' + ${paginaActual} + ' de ' + ${totalPaginas}"></span>
+            <a th:if="${paginaActual < totalPaginas}"
+               th:href="@{/clientes(
+                    page=${paginaActual + 1},
+                    size=${tamanoPagina},
+                    nombre=${param.nombre} ?: null,
+                    fecha=${param.fecha} ?: null,
+                    emailVerificado=${param.emailVerificado} ?: null,
+                    conPedidos=${param.conPedidos} ?: null,
+                    orden=${param.orden} ?: null
+               )}">Siguiente</a>
+        </div>
+    </main>
+    <footer th:replace="~{index :: footer}"></footer>
+</body>
+</html> 

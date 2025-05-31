@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${cafe.nombre} + ' | Café de Altura'">Detalle Café</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+    <header th:replace="~{index :: header}"></header>
+    <main>
+        <section class="formulario" style="max-width:600px;">
+            <!-- Imagen del café detalle -->
+            <img th:if="${cafe.imagen != null and !#strings.isEmpty(cafe.imagen)}"
+                 th:src="@{'/images/' + ${cafe.imagen}}"
+                 alt="imagen café" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">
+            <img th:unless="${cafe.imagen != null and !#strings.isEmpty(cafe.imagen)}"
+                 th:src="@{'/images/cafe-default.png'}"
+                 alt="imagen café" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:1rem;">
+            <h2 th:text="${cafe.nombre}">Nombre del café</h2>
+            <p><strong>Origen:</strong> <span th:text="${cafe.origen}">Colombia</span></p>
+            <p><strong>Intensidad:</strong> <span th:text="${cafe.intensidad}">7</span></p>
+            <p><strong>Descripción:</strong> <span th:text="${cafe.descripcion}">Descripción del café</span></p>
+            <p><strong>Precio:</strong> <span th:text="${#numbers.formatDecimal(cafe.precio, 1, 'POINT', 2, 'NONE')} + ' €'">10,50 €</span></p>
+            <form th:action="@{/carrito/anadir}" method="post" style="margin-top:1.5rem;">
+                <input type="hidden" name="idCafe" th:value="${cafe.id}" />
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" name="cantidad" id="cantidad" min="1" max="99" value="1" required>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.7rem;">Añadir al carrito</button>
+            </form>
+        </section>
+    </main>
+    <footer th:replace="~{index :: footer}"></footer>
+</body>
+</html> 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Pedido #' + ${pedido.id}">Detalle pedido</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+    <header th:replace="~{index :: header}"></header>
+    <main>
+        <h1 th:text="'Pedido #' + ${pedido.id}" style="text-align:center; margin-top:2rem;"></h1>
+        <div class="detalle-card">
+            <p><strong>Cliente:</strong> <span th:text="${pedido.cliente.nombre}"></span></p>
+            <p><strong>Fecha:</strong> <span th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></span></p>
+            <p><strong>Estado:</strong> <span th:text="${pedido.estado}"></span></p>
+            <p><strong>Comentario:</strong> <span th:text="${pedido.comentario}"></span></p>
+            <h3>Líneas de pedido</h3>
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th>Café</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="linea : ${pedido.lineas}">
+                        <td th:text="${linea.cafe.nombre}"></td>
+                        <td th:text="${linea.cantidad}"></td>
+                        <td th:text="${#numbers.formatDecimal(linea.cafe.precio, 1, 'POINT', 2, 'NONE')} + ' €'"></td>
+                        <td th:text="${#numbers.formatDecimal(linea.cafe.precio * linea.cantidad, 1, 'POINT', 2, 'NONE')} + ' €'"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top:1rem;"><strong>Total:</strong> <span th:text="${#numbers.formatDecimal(pedido.total, 1, 'POINT', 2, 'NONE')} + ' €'"></span></p>
+        </div>
+        <div style="margin-top:2rem; text-align:center;">
+            <a th:href="@{'/pedidos/' + ${pedido.id} + '/editar'}" class="btn btn-secondary">Editar</a>
+            <form th:action="@{'/pedidos/' + ${pedido.id} + '/eliminar'}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+            <a th:href="@{/pedidos}" class="btn btn-outline">Volver</a>
+        </div>
+    </main>
+    <footer th:replace="~{index :: footer}"></footer>
+</body>
+</html> 

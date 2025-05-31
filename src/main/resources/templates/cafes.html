@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafés | Café de Altura</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+    <header th:replace="~{index :: header}"></header>
+    <main>
+        <h1 style="text-align:center; margin-top:2rem;">Nuestros cafés</h1>
+        <!-- Filtros y búsqueda -->
+        <form method="get" action="/cafes" style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-bottom:2rem;">
+            <input type="text" name="palabra" placeholder="Buscar por nombre o descripción" th:value="${param.palabra}" />
+            <label>Intensidad:
+                <input type="number" name="minIntensidad" min="1" max="10" placeholder="Mín" style="width:60px;" th:value="${param.minIntensidad}" />
+                -
+                <input type="number" name="maxIntensidad" min="1" max="10" placeholder="Máx" style="width:60px;" th:value="${param.maxIntensidad}" />
+            </label>
+            <label><input type="checkbox" name="stockBajo" th:checked="${param.stockBajo}" /> Stock bajo</label>
+            <label><input type="checkbox" name="agotados" th:checked="${param.agotados}" /> Solo agotados</label>
+            <label>Ordenar por:
+                <select name="orden" th:value="${param.orden}">
+                    <option value="nombre">Nombre</option>
+                    <option value="precio">Precio</option>
+                    <option value="intensidad">Intensidad</option>
+                </select>
+            </label>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+        <div style="text-align:right; margin-bottom:1rem;">
+            <a th:href="@{/cafes/nuevo}" class="btn btn-primary">Nuevo café</a>
+        </div>
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+        <div th:if="${success}" class="success" th:text="${success}"></div>
+        <div class="productos-lista" style="margin-top:2rem;">
+            <div class="producto-card" th:each="cafe : ${cafes}">
+                <img th:if="${cafe.imagen != null and !#strings.isEmpty(cafe.imagen)}"
+                     th:src="@{'/images/' + ${cafe.imagen}}"
+                     alt="imagen café" />
+                <img th:unless="${cafe.imagen != null and !#strings.isEmpty(cafe.imagen)}"
+                     th:src="@{'/images/cafe-default.png'}"
+                     alt="imagen café" />
+                <p class="nombre" th:text="${cafe.nombre}">Nombre del café</p>
+                <span class="precio" th:text="${#numbers.formatDecimal(cafe.precio, 1, 'POINT', 2, 'NONE')} + ' €'">10,50 €</span>
+                <a th:href="@{'/cafes/' + ${cafe.id}}" class="btn btn-outline" style="margin-top:0.7rem;">Ver detalles</a>
+                <a th:href="@{'/cafes/' + ${cafe.id} + '/editar'}" class="btn btn-secondary" style="margin-top:0.7rem;">Editar</a>
+                <form th:action="@{'/cafes/' + ${cafe.id} + '/eliminar'}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger" style="margin-top:0.7rem;">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <div class="pagination" style="text-align:center; margin:2rem 0;">
+        <a th:if="${paginaActual > 1}"
+           th:href="@{/cafes(
+                page=${paginaActual - 1},
+                size=${tamanoPagina},
+                palabra=${param.palabra} ?: null,
+                minIntensidad=${param.minIntensidad} ?: null,
+                maxIntensidad=${param.maxIntensidad} ?: null,
+                stockBajo=${param.stockBajo} ?: null,
+                agotados=${param.agotados} ?: null,
+                orden=${param.orden} ?: null
+           )}">Anterior</a>
+        <span th:text="'Página ' + ${paginaActual} + ' de ' + ${totalPaginas}"></span>
+        <a th:if="${paginaActual < totalPaginas}"
+           th:href="@{/cafes(
+                page=${paginaActual + 1},
+                size=${tamanoPagina},
+                palabra=${param.palabra} ?: null,
+                minIntensidad=${param.minIntensidad} ?: null,
+                maxIntensidad=${param.maxIntensidad} ?: null,
+                stockBajo=${param.stockBajo} ?: null,
+                agotados=${param.agotados} ?: null,
+                orden=${param.orden} ?: null
+           )}">Siguiente</a>
+    </div>
+    <footer th:replace="~{index :: footer}"></footer>
+</body>
+</html> 

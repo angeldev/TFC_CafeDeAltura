@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Líneas de pedido | Café de Altura</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+    <header th:replace="~{index :: header}"></header>
+    <main>
+        <h1 style="text-align:center; margin-top:2rem;">Líneas de pedido</h1>
+        <!-- Filtros y búsqueda -->
+        <form method="get" action="/lineas" style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-bottom:2rem;">
+            <input type="number" name="cafeId" placeholder="ID Café" th:value="${param.cafeId}" />
+            <input type="number" name="pedidoId" placeholder="ID Pedido" th:value="${param.pedidoId}" />
+            <input type="number" name="cantidad" placeholder="Cantidad mayor a..." th:value="${param.cantidad}" />
+            <input type="number" step="0.01" name="subtotal" placeholder="Subtotal mayor a..." th:value="${param.subtotal}" />
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Café</th>
+                    <th>Pedido</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="linea : ${lineas}">
+                    <td th:text="${linea.id}"></td>
+                    <td th:text="${linea.cafe != null ? linea.cafe.nombre : ''}"></td>
+                    <td th:text="${linea.pedido != null ? linea.pedido.id : ''}"></td>
+                    <td th:text="${linea.cantidad}"></td>
+                    <td th:text="${#numbers.formatDecimal(linea.precioUnitario, 1, 'POINT', 2, 'NONE')} + ' €'"></td>
+                    <td th:text="${#numbers.formatDecimal(linea.subtotal, 1, 'POINT', 2, 'NONE')} + ' €'"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pagination" style="text-align:center; margin:2rem 0;">
+            <a th:if="${paginaActual > 1}"
+               th:href="@{/lineas(
+                    page=${paginaActual - 1},
+                    size=${tamanoPagina},
+                    cafeId=${param.cafeId} ?: null,
+                    pedidoId=${param.pedidoId} ?: null,
+                    cantidad=${param.cantidad} ?: null,
+                    subtotal=${param.subtotal} ?: null
+               )}">Anterior</a>
+            <span th:text="'Página ' + ${paginaActual} + ' de ' + ${totalPaginas}"></span>
+            <a th:if="${paginaActual < totalPaginas}"
+               th:href="@{/lineas(
+                    page=${paginaActual + 1},
+                    size=${tamanoPagina},
+                    cafeId=${param.cafeId} ?: null,
+                    pedidoId=${param.pedidoId} ?: null,
+                    cantidad=${param.cantidad} ?: null,
+                    subtotal=${param.subtotal} ?: null
+               )}">Siguiente</a>
+        </div>
+    </main>
+    <footer th:replace="~{index :: footer}"></footer>
+</body>
+</html> 
