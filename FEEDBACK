@@ -1,0 +1,85 @@
+
+# ☕ Evaluación del proyecto de LOLA
+
+## 🧱 1. Estructura del proyecto y arquitectura por capas
+- ✅ Separación clara en capas (Controller, Service, Repository, Entity)
+- ✅ Lógica de negocio correctamente ubicada en la capa de servicio
+- ✅ No se mezcla acceso a datos ni lógica de presentación  
+  **Comentario:**  
+  El proyecto sigue una arquitectura limpia con controladores, servicios y repositorios bien diferenciados. Se aprecia un diseño cuidado.  
+  Muy bien por haber incorporado **DTOs**, lo que permite **separar correctamente la capa de presentación (controladores) de la lógica de negocio (servicio)** y el modelo de dominio.  
+  También es correcto que **la lógica esté ubicada en los servicios**, como se ha hecho.  
+  Si se quiere **hilar más fino y dar un salto de calidad extra**, se puede considerar mover algunas lógicas específicas (como el cálculo del total del pedido, generación de líneas de pedido o validaciones) a las propias entidades (`Pedido`, `LineaDePedido`, etc.). Esto permitiría que los **servicios actúen como orquestadores**, delegando la lógica concreta en el dominio, y resultando en clases de servicio más limpias y enfocadas.
+
+## 🧩 2. Spring Core – Inyección de dependencias
+- ✅ Se evita el uso de `new` para crear dependencias
+- ✅ Uso de inyección de dependencias (por constructor o con `@Autowired`)
+- ✅ Uso adecuado de `@Component`, `@Service`, `@Repository`  
+  **Comentario:**  
+  Se utilizan correctamente anotaciones y principios de inversión de control en todo el proyecto.
+
+## 🗃️ 3. Persistencia con JPA
+- ✅ Entidades bien definidas y anotadas (`@Entity`, `@Id`, `@Column`)
+- ✅ Relaciones modeladas correctamente (`@OneToMany`, `@ManyToOne`, etc.)
+- 🟧 Consultas por nombre de método (`findByTipo`, etc.)
+- ✅ Uso de paginación con `Pageable` y `Page` si procede
+- ✅ Separación lógica entre repositorio y servicio
+- ❌ Complejidad innecesaria en la implementación de los repositorios  
+  **Comentario:**  
+  La capa de persistencia está bien estructurada, pero la implementación de los repositorios introduce una complejidad innecesaria.  
+  Para cada repositorio se han creado **dos interfaces y una clase de implementación**, lo cual está **sobredimensionado**. En la mayoría de casos sería suficiente tener una única interfaz (por ejemplo, `CafeRepository`) y, si hace falta lógica adicional, una implementación concreta (`CafeRepositoryImpl`).  
+  Este enfoque más sencillo es más habitual en proyectos profesionales. Tener múltiples capas de abstracción donde no se necesita puede dificultar el mantenimiento y aumentar la curva de comprensión del código.
+  También se ha detectado que **algunos métodos devuelven un `Map` en lugar de una lista o conjunto**, incluso cuando las entidades ya tienen un campo `@Id`. Esto no aporta valor y complica innecesariamente el código: con devolver una `List` o `Set` es suficiente.
+
+## 🛢️ 4. Base de datos
+- ✅ Configuración correcta en `application.properties`
+- ✅ Conexión establecida con MySQL y persistencia de datos funcional mediante JPA/Hibernate  
+  **Comentario:**  
+  Muy buena organización de propiedades por entorno (`dev`, `prod`, `mem`, etc.). Ejemplo claro de buenas prácticas.
+
+## 🌐 5. Spring Web / REST
+- ✅ Endpoints REST bien definidos y nombrados
+- ✅ Uso correcto de `@GetMapping`, `@PostMapping`, etc.
+- ✅ Uso adecuado de `@PathVariable`, `@RequestBody`, `@RequestParam`
+- 🟧 Las rutas no siguen el estándar REST  
+  **Comentario:**  
+  Aunque los controladores están bien organizados y se aplican bien las anotaciones, **las rutas no siguen el estándar REST**: deberían estar en **plural**, sin usar camelCase y preferiblemente en **kebab-case** (por ejemplo, `lineas-de-pedido` en lugar de `lineasDePedido`).
+ Otro punto importante a mencionar es que no se han gestionado los errores en la API y tan sólo devuelve códigos exitosos 2XX. Sería interesante que devolveriera errores de tipo 4XX o 5XX.
+
+## 🔐 6. Spring Security
+- ✅ Autenticación implementada (por ejemplo, básica o JWT)
+- ✅ Rutas protegidas según roles o permisos
+- ✅ Configuración clara (`SecurityFilterChain`, filtros, etc.)  
+  **Comentario:**  
+  La clase `SecurityConfig` está correctamente implementada, incluyendo autenticación y protección de rutas. Se utiliza correctamente la configuración basada en `SecurityFilterChain`, cumpliendo los estándares actuales de Spring Security. Muy bien resuelto.
+
+## 🧪 7. Testing
+- [ ] Uso de JUnit y Spring Boot Test
+- [ ] Pruebas de servicios, repositorios o controladores
+- [ ] Casos de éxito y error cubiertos  
+  **Comentario:**  
+
+## 🧼 8. Buenas prácticas y limpieza de código
+- ✅ Nombres claros y expresivos
+- 🟧 Código sin duplicación ni clases innecesarias
+- ❌ Validaciones, manejo de errores, uso correcto de `Optional`
+- 🟧 Uso innecesario de rutas completas en tipos estándar (por ejemplo, `java.util.List`)  
+  **Comentario:**  
+  El código está bien estructurado, pero se han detectado detalles mejorables como el uso repetido de rutas completas (por ejemplo, `java.util.List` en lugar de importar `List` arriba). Esto ralentiza la lectura del código y lo hace más verboso de forma innecesaria. Un buen uso de imports mejora la legibilidad general del proyecto. Además, encuentro una carencia a la hora de gestionar errores, sería buena idea incorporar excepciones propias para manejar los errores que genere el cliente.
+
+## 🎁 9. Extras (no obligatorios, pero suman)
+- ✅ Uso de DTOs
+- [ ] Swagger / documentación de la API
+- ❌ Buen uso de Git (commits claros, ramas, etc.)
+- ✅ Inclusión de un `README.md` claro con instrucciones de ejecución
+- 🟧 Código escrito en español
+- ✅ Documentación adicional mediante colecciones de Postman  
+  **Comentario:**  
+  Aunque no se ha utilizado Swagger, el proyecto está **muy bien documentado** y se han incluido **colecciones de Postman** que facilitan mucho las pruebas manuales.  
+  Por otro lado, aunque es comprensible en un contexto de aprendizaje, se recomienda **usar el inglés en nombres de clases, métodos y rutas** para ir adquiriendo soltura y seguir los estándares de la industria.
+  Un punto muy importante es a medida que vamos trabajando ir realizando commits y de esta forma tener un histórico de los cambios añadidos en cada momento.
+
+## 📊 Comentario general
+El proyecto presenta una arquitectura por capas completa y bien aplicada, con servicios, DTOs y configuración profesional. A destacar el uso de múltiples entornos, documentación clara y una capa de seguridad bien implementada.  
+Los puntos clave a mejorar son: añadir testeo automatizado, robustecer validaciones y código HTTP, **simplificar la estructura de persistencia**, **usar estructuras adecuadas como `List` en lugar de `Map` innecesarios**,  mejorar las convenciones REST y migrar progresivamente a código en inglés.  
+Como mejora avanzada, se puede considerar encapsular lógica de negocio en las entidades del dominio para hacer los servicios más ligeros y expresivos.
